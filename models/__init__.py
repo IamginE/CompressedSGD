@@ -1,0 +1,1 @@
+from .vanilla_cnn import vanilla_cnn

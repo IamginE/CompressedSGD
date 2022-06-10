@@ -1,0 +1,11 @@
+python3 main.py \
+    --exp_name sample_experiment \
+    --dataset_root /home/amin/Documents/projects/SignSGDVariant/datasets/mnist \
+    --model vanilla_cnn \
+    --dataset MNIST \
+    --optimizer sign_sgd \
+    --batch_size 64 \
+    --epochs 1 \
+    --lr 0.1 \
+    --num_bits 2 \
+    --step_size 1
