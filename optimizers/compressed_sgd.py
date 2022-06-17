@@ -4,7 +4,7 @@ import torch.optim as optim
 
 __all__ = ['compressed_sgd']
 
-class compressedSGD(optim.Optimizer):
+class CompressedSGD(optim.Optimizer):
   r"""Generalized gradient compression using binning.
   """
   def __init__(self, params, lr=0.01, rand_zero=True, num_bits=2, decay_max=1.0, decay_min=1.0):
@@ -69,5 +69,5 @@ class compressedSGD(optim.Optimizer):
 
 def compressed_sgd(params, lr=0.01, rand_zero=True, num_bits=2,
                 decay_max=1.0, decay_min=1.0, **kwargs):
-    return compressedSGD(params=params, lr=lr, rand_zero=rand_zero,
+    return CompressedSGD(params=params, lr=lr, rand_zero=rand_zero,
                 num_bits=num_bits, decay_max=decay_max, decay_min=decay_min)
