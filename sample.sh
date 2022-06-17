@@ -3,11 +3,14 @@ python3 main.py \
     --dataset_root /home/amin/Documents/projects/SignSGDVariant/datasets/mnist \
     --model vanilla_cnn \
     --dataset MNIST \
-    --optimizer sign_sgd \
-    --batch_size 8 \
-    --epochs 10 \
-    --lr 0.1 \
+    --optimizer compressed_sgd \
+    --batch_size 4 \
+    --epochs 5 \
+    --weight_decay 1 0.8 \
+    --lr 0.1 0.01 \
     --num_bits 2 \
     --binning lin \
+    --num_workers 4 \
+    --batchwise_evaluation False\
     --rand_zero True \
     --step_size 1

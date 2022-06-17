@@ -39,7 +39,6 @@ class CompressedSGD(optim.Optimizer):
   def aggregate(self, worker_id):
     """Simulates distributed workers by aggregating gradients.
     Needs to be called after loss.backward()!"""
-
     if worker_id < 0 or worker_id >= self.num_workers:
       raise ValueError("Worker_id needs to be an integer in the interval [0, num_workers)")
     
@@ -94,35 +93,31 @@ class CompressedSGD(optim.Optimizer):
         aggr_grad = None
         count = 0
         for i in range(self.num_workers):
-
-          if not self.used[i]:
-            continue
+            
+            if not self.used[i]:
+                continue
           
-          count += 1
-          # descretize gradient based on max_grad_val, if gradient > 0
-          # and based on min_grad_val, if gradient < 0
-          grad = self.grad_vals[i][p]
-          if self.binning == 'lin':
-            grad[grad > 0] = torch.ceil((2**(self.num_bits-1)) * torch.div(grad[grad > 0], self.max_grad_vals[i][p][grad > 0]))
-            grad[grad < 0] = - torch.ceil((2**(self.num_bits-1)) * torch.div(grad[grad < 0], self.min_grad_vals[i][p][grad < 0]))
-          elif self.binning == 'exp':
-            grad[grad > 0] = torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(grad[grad > 0] + 1), torch.log(self.max_grad_vals[i][p][grad > 0] + 1)))) # log_e(x+1)/log_e(maxgrad+1) = log_(maxgrad+1)(x+1)
-            grad[grad < 0] = -torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(-grad[grad < 0] + 1), torch.log(-self.min_grad_vals[i][p][grad < 0] + 1))))
+            count += 1
+            # descretize gradient based on max_grad_val, if gradient > 0
+            # and based on min_grad_val, if gradient < 0
+            grad = self.grad_vals[i][p]
+            if self.binning == 'lin':
+                grad[grad > 0] = torch.ceil((2**(self.num_bits-1)) * torch.div(grad[grad > 0], self.max_grad_vals[i][p][grad > 0]))
+                grad[grad < 0] = - torch.ceil((2**(self.num_bits-1)) * torch.div(grad[grad < 0], self.min_grad_vals[i][p][grad < 0]))
+            elif self.binning == 'exp':
+                grad[grad > 0] = torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(grad[grad > 0] + 1), torch.log(self.max_grad_vals[i][p][grad > 0] + 1)))) # log_e(x+1)/log_e(maxgrad+1) = log_(maxgrad+1)(x+1)
+                grad[grad < 0] = -torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(-grad[grad < 0] + 1), torch.log(-self.min_grad_vals[i][p][grad < 0] + 1))))
 
 
-          if aggr_grad == None:
-            aggr_grad = torch.clone(grad)
-          else:
-            aggr_grad = torch.add(aggr_grad, grad)
-          self.used[i] = False
+            aggr_grad = torch.clone(grad) if aggr_grad is None else torch.add(aggr_grad, grad)
 
         # simulate the voting
         aggr_grad[aggr_grad > 0] = torch.ceil(torch.div(aggr_grad[aggr_grad > 0], torch.tensor(count)))
         aggr_grad[aggr_grad < 0] = torch.floor(torch.div(aggr_grad[aggr_grad < 0], torch.tensor(count)))
-
         # make update
         p.data -= group['lr'] * aggr_grad
 
+    self.used = [False for i in range(self.num_workers)]
     return loss
 
 def compressed_sgd(params, lr=0.01, rand_zero=True, num_bits=2,

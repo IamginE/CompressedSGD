@@ -30,7 +30,8 @@ def get_configs():
     parser.add_argument('--step_size', type=float)
     parser.add_argument('--binning', type=str, default=None)
     parser.add_argument('--num_bits', default=2, type=int)
-    parser.add_argument('--num_workers', default=4, type=int)
+    parser.add_argument('--num_workers', default=1, type=int)
+    parser.add_argument('--batchwise_evaluation', default=False, type=str2bool)
 
     args = parser.parse_args()
     args.log_folder = configure_log_folder(args)

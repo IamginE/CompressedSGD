@@ -3,7 +3,7 @@ from torch import nn
 
 class Trainer():
     def __init__(self, model, train_loader, eval_loader, optimizer, batchwise_evaluation=False,
-                 plot=True, **kwargs):
+                 plot=True, num_workers=1, **kwargs):
         super(Trainer, self).__init__()
         self.model = model
         self.train_loader = train_loader
@@ -11,6 +11,7 @@ class Trainer():
         self.optimizer = optimizer
         self.batchwise_evaluation = batchwise_evaluation
         self.plot = plot
+        self.num_workers = num_workers
         self.loss = nn.CrossEntropyLoss()
         if hasattr(self.optimizer, 'is_cumulative') and self.optimizer.is_cumulative:
             assert hasattr(self.optimizer, 'aggregate'), 'Cumulative optimizer without accumulate!'
@@ -32,6 +33,7 @@ class Trainer():
             total_loss = 0.0
             for batch_idx, (inputs, targets) in \
                 tqdm(enumerate(self.train_loader), desc='Epoch', total=len(self.train_loader)):
+                # print(batch_idx, self.num_workers)
                 out = self.model(inputs)
 
                 loss = self.loss(out, targets)
@@ -42,24 +44,26 @@ class Trainer():
 
                 self.optimizer.zero_grad()
                 loss.backward()
-                self.batch_action(batch_idx)
 
-                if self.batchwise_evaluation:
-                    current_loss, current_acc = self.evaluate()
-                    batch_loss_hist.append(current_loss)
-                    batch_acc_hist.append(current_acc)
-            self.epoch_action()
+                self.batch_action(batch_idx%self.num_workers)
+                if batch_idx%self.num_workers == self.num_workers-1:
+                    self.epoch_action()
+                    if self.batchwise_evaluation:
+                        current_loss, current_acc = self.evaluate()
+                        batch_loss_hist.append(current_loss)
+                        batch_acc_hist.append(current_acc)
+
             avg_epoch_loss_hist.append(total_loss / float(num_inputs))
             avg_epoch_acc_hist.append(num_correct / float(num_inputs) * 100)
-        
-        if self.plot:
-            self._draw_plots(avg_epoch_loss_hist, avg_epoch_acc_hist, batch_loss_hist, batch_acc_hist)
         
         return {'avg_epoch_loss_hist': avg_epoch_loss_hist, 'avg_epoch_acc_hist': avg_epoch_acc_hist, 
                 'batch_loss_hist': batch_loss_hist, 'batch_acc_hist': batch_acc_hist}
     
     def evaluate(self):
         self.model.eval()
+        num_correct = 0
+        total_loss = 0.0
+        num_inputs = 0
         for batch_idx, (inputs, targets) in \
             tqdm(enumerate(self.eval_loader), desc='Evaluate', total=len(self.eval_loader)):
             out = self.model(inputs)
@@ -69,7 +73,7 @@ class Trainer():
             num_correct += (preds == targets).sum().item()
             total_loss += loss.item() * inputs.size(0)
             num_inputs += inputs.size(0)
-
         total_loss /= float(num_inputs)
         accuracy = (num_correct / float(num_inputs)) * 100
+        self.model.train()
         return total_loss, accuracy
