@@ -4,8 +4,10 @@ python3 main.py \
     --model vanilla_cnn \
     --dataset MNIST \
     --optimizer sign_sgd \
-    --batch_size 64 \
-    --epochs 1 \
+    --batch_size 8 \
+    --epochs 10 \
     --lr 0.1 \
     --num_bits 2 \
+    --binning lin \
+    --rand_zero True \
     --step_size 1

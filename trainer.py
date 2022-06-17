@@ -2,36 +2,74 @@ from tqdm import tqdm
 from torch import nn
 
 class Trainer():
-    def __init__(self, model, data_loader, optimizer, **kwargs):
+    def __init__(self, model, train_loader, eval_loader, optimizer, batchwise_evaluation=False,
+                 plot=True, **kwargs):
         super(Trainer, self).__init__()
         self.model = model
-        self.loader = data_loader
+        self.train_loader = train_loader
+        self.eval_loader = eval_loader
         self.optimizer = optimizer
+        self.batchwise_evaluation = batchwise_evaluation
+        self.plot = plot
         self.loss = nn.CrossEntropyLoss()
-
+        if hasattr(self.optimizer, 'is_cumulative') and self.optimizer.is_cumulative:
+            assert hasattr(self.optimizer, 'aggregate'), 'Cumulative optimizer without accumulate!'
+            self.batch_action = self.optimizer.aggregate
+            self.epoch_action = self.optimizer.step
+        else:
+            self.batch_action = lambda *args: self.optimizer.step()
+            self.epoch_action = lambda *args: None #Do nothing
+        
     def train(self, epochs):
-        acc_hist = []
-        loss_hist = []
+        self.model.train()
+        avg_epoch_acc_hist = [] # Average of batch_losses for each epoch
+        avg_epoch_loss_hist = [] # Average of batch_accs for each epoch
+        batch_loss_hist = [] # Exact loss over the entire dataset after each batch
+        batch_acc_hist = [] # Exact acc over the entire dataset after each batch
         for ep in range(epochs):
             num_correct = 0
             num_inputs = 0
             total_loss = 0.0
-
             for batch_idx, (inputs, targets) in \
-                tqdm(enumerate(self.loader), desc='Epoch', total=len(self.loader)):
+                tqdm(enumerate(self.train_loader), desc='Epoch', total=len(self.train_loader)):
                 out = self.model(inputs)
 
                 loss = self.loss(out, targets)
-                total_loss += loss.item() * inputs.size(0)
-
                 preds = out.argmax(dim=1)
                 num_correct += (preds == targets).sum().item()
+                total_loss += loss.item() * inputs.size(0)
                 num_inputs += inputs.size(0)
+
                 self.optimizer.zero_grad()
                 loss.backward()
-                self.optimizer.step()
+                self.batch_action(batch_idx)
 
-            loss_hist.append(total_loss / float(num_inputs))
-            acc_hist.append(num_correct / float(num_inputs) * 100)
+                if self.batchwise_evaluation:
+                    current_loss, current_acc = self.evaluate()
+                    batch_loss_hist.append(current_loss)
+                    batch_acc_hist.append(current_acc)
+            self.epoch_action()
+            avg_epoch_loss_hist.append(total_loss / float(num_inputs))
+            avg_epoch_acc_hist.append(num_correct / float(num_inputs) * 100)
         
-        return {'loss': loss_hist, 'acc': acc_hist}
+        if self.plot:
+            self._draw_plots(avg_epoch_loss_hist, avg_epoch_acc_hist, batch_loss_hist, batch_acc_hist)
+        
+        return {'avg_epoch_loss_hist': avg_epoch_loss_hist, 'avg_epoch_acc_hist': avg_epoch_acc_hist, 
+                'batch_loss_hist': batch_loss_hist, 'batch_acc_hist': batch_acc_hist}
+    
+    def evaluate(self):
+        self.model.eval()
+        for batch_idx, (inputs, targets) in \
+            tqdm(enumerate(self.eval_loader), desc='Evaluate', total=len(self.eval_loader)):
+            out = self.model(inputs)
+
+            loss = self.loss(out, targets)
+            preds = out.argmax(dim=1)
+            num_correct += (preds == targets).sum().item()
+            total_loss += loss.item() * inputs.size(0)
+            num_inputs += inputs.size(0)
+
+        total_loss /= float(num_inputs)
+        accuracy = (num_correct / float(num_inputs)) * 100
+        return total_loss, accuracy

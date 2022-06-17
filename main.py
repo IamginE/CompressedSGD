@@ -4,37 +4,67 @@ import data_loaders
 from trainer import Trainer
 from config import get_configs
 
+import numpy as np
+from matplotlib import pyplot as plt
+
+def _plot(histories, args):
+    file = 'sample.png'
+    x = np.linspace(0, len(histories[(args.lr[0], args.weight_decay[0])]),
+                 num = len(histories[(args.lr[0], args.weight_decay[0])]))
+
+    fig, axs = plt.subplots(len(args.lr), len(args.weight_decay), figsize=(20, 15))
+
+    for i in range(len(args.lr)):
+        for j in range(len(args.weight_decay)):
+            axs[i, j].plot(x, histories[(args.lr[i], args.weight_decay[j])])
+            axs[i, j].set_ylim([0, 4])
+            axs[i, j].title.set_text(f'lr: {args.learning_rates[i]}, beta: {args.weight_decay[j]}')
+
+    plt.tight_layout()
+    plt.savefig(file)
+
 def main():
     args = get_configs()
-
-    model = models.__dict__[args.model](
-            num_classes=args.num_classes,
-            pretrianed=args.pretrained
-            )
-
-    optimizer = optimizers.__dict__[args.optimizer](
-            params=model.parameters(),
-            lr=args.lr,
-            lr_decay=args.lr_decay,
-            decay_min=args.decay_min,
-            decay_max=args.decay_max,
-            num_bits=args.num_bits, 
-            )
 
     train_loader = data_loaders.__dict__[args.dataset](
             root=args.dataset_root,
             split='train',
             batch_size=args.batch_size,
-            num_workers=args.num_workers
+            num_workers=4
             )
-    
-    trainer = Trainer(model=model,
-                      data_loader=train_loader,
-                      optimizer=optimizer,
-                      args=args
-                      )
-    history = trainer.train(args.epochs)
+    eval_loader = data_loaders.__dict__[args.dataset](
+            root=args.dataset_root,
+            split='eval',
+            batch_size=args.batch_size,
+            num_workers=4
+            )
 
-
+    histories = {}
+    for lr in args.lr:
+        for weight_decay in args.weight_decay:
+            model = models.__dict__[args.model](
+                num_classes=args.num_classes,
+                pretrianed=args.pretrained
+                )
+            optimizer = optimizers.__dict__[args.optimizer](
+                    params=model.parameters(),
+                    lr=lr,
+                    lr_decay=args.lr_decay,
+                    decay_min=weight_decay,
+                    decay_max=weight_decay,
+                    num_bits=args.num_bits, 
+                    rand_zero=args.rand_zero,
+                    num_workers=args.num_workers,
+                    binning=args.binning
+                )
+            trainer = Trainer(model=model,
+                    train_loader=train_loader,
+                    eval_loader=eval_loader,
+                    optimizer=optimizer,
+                    args=args
+                )
+            history = trainer.train(args.epochs)
+            histories[(lr, weight_decay)] = history
+    _plot(histories, args)
 if __name__=='__main__':
     main()
