@@ -43,8 +43,8 @@ class Trainer():
                 preds = out.argmax(dim=1)
                 curr_correct = (preds == _targets).sum().item()
                 num_correct += curr_correct
-                curr_loss = loss.item() * batch_size
-                total_loss += curr_loss
+                curr_loss = loss.item()
+                total_loss += curr_loss * batch_size
                 num_inputs += batch_size
 
                 self.optimizer.zero_grad()
@@ -58,7 +58,7 @@ class Trainer():
                         batch_loss_hist.append(current_loss)
                         batch_acc_hist.append(current_acc)
                     else:
-                        batch_loss_hist.append(curr_loss/batch_size)
+                        batch_loss_hist.append(curr_loss)
                         batch_acc_hist.append(curr_correct/ float(batch_size) * 100)
             avg_epoch_loss_hist.append(total_loss / float(num_inputs))
             avg_epoch_acc_hist.append(num_correct / float(num_inputs) * 100)

@@ -4,12 +4,12 @@ python3 main.py \
     --model vanilla_cnn \
     --dataset MNIST \
     --optimizer compressed_sgd \
-    --batch_size 4 \
-    --epochs 5 \
-    --weight_decay 1 0.8 \
-    --lr 0.1 0.01 \
-    --num_bits 2 \
+    --batch_size 64 \
+    --epochs 1 \
+    --weight_decay 0.8 \
+    --lr 0.01 \
+    --num_bits 3 \
     --binning lin \
-    --num_workers 4 \
+    --num_workers 1 \
     --batchwise_evaluation False\
     --rand_zero True
