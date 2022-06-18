@@ -6,7 +6,7 @@ class Trainer():
     def __init__(self, model, train_loader, eval_loader, optimizer, batchwise_evaluation=False,
                  plot=True, num_workers=1, **kwargs):
         super(Trainer, self).__init__()
-        self.model = model
+        self.model = model.cuda() if cuda_available else model
         self.train_loader = train_loader
         self.eval_loader = eval_loader
         self.optimizer = optimizer
