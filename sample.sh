@@ -12,5 +12,4 @@ python3 main.py \
     --binning lin \
     --num_workers 4 \
     --batchwise_evaluation False\
-    --rand_zero True \
-    --step_size 1
+    --rand_zero True

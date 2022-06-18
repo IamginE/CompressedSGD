@@ -27,7 +27,6 @@ def get_configs():
     parser.add_argument('--weight_decay', nargs='+',
                         type=float, default=[1, 0.8, 0.5, 0.3, 0.1] )
     parser.add_argument('--lr_decay', type=float)
-    parser.add_argument('--step_size', type=float)
     parser.add_argument('--binning', type=str, default=None)
     parser.add_argument('--num_bits', default=2, type=int)
     parser.add_argument('--num_workers', default=1, type=int)

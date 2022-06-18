@@ -1,6 +1,7 @@
 from tqdm import tqdm
 from torch import nn
-
+import torch
+cuda_available = torch.cuda.is_available()
 class Trainer():
     def __init__(self, model, train_loader, eval_loader, optimizer, batchwise_evaluation=False,
                  plot=True, num_workers=1, **kwargs):
@@ -33,14 +34,18 @@ class Trainer():
             total_loss = 0.0
             for batch_idx, (inputs, targets) in \
                 tqdm(enumerate(self.train_loader), desc='Epoch', total=len(self.train_loader)):
-                # print(batch_idx, self.num_workers)
-                out = self.model(inputs)
+                batch_size = inputs.size(0)
+                _inputs = inputs.cuda() if cuda_available else inputs
+                _targets = targets.cuda() if cuda_available else targets
+                out = self.model(_inputs)
 
-                loss = self.loss(out, targets)
+                loss = self.loss(out, _targets)
                 preds = out.argmax(dim=1)
-                num_correct += (preds == targets).sum().item()
-                total_loss += loss.item() * inputs.size(0)
-                num_inputs += inputs.size(0)
+                curr_correct = (preds == _targets).sum().item()
+                num_correct += curr_correct
+                curr_loss = loss.item() * batch_size
+                total_loss += curr_loss
+                num_inputs += batch_size
 
                 self.optimizer.zero_grad()
                 loss.backward()
@@ -52,7 +57,9 @@ class Trainer():
                         current_loss, current_acc = self.evaluate()
                         batch_loss_hist.append(current_loss)
                         batch_acc_hist.append(current_acc)
-
+                    else:
+                        batch_loss_hist.append(curr_loss/batch_size)
+                        batch_acc_hist.append(curr_correct/ float(batch_size) * 100)
             avg_epoch_loss_hist.append(total_loss / float(num_inputs))
             avg_epoch_acc_hist.append(num_correct / float(num_inputs) * 100)
         
