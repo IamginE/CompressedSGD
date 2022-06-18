@@ -7,8 +7,8 @@ __all__ = ['compressed_sgd']
 class CompressedSGD(optim.Optimizer):
   r"""Generalized gradient compression using binning.
   """
-  def __init__(self, params, lr=0.01, rand_zero=True, num_bits=2, decay_max=1.0, 
-               decay_min=1.0, num_workers=4, binning='lin'):
+  def __init__(self, params, lr, rand_zero, num_bits, decay_max, 
+               decay_min, num_workers, binning='lin'):
 
     if num_bits <= 0 or type(num_bits) != int:
         raise ValueError("Expected num_bits to be a positive integer.")
@@ -120,7 +120,7 @@ class CompressedSGD(optim.Optimizer):
     self.used = [False for i in range(self.num_workers)]
     return loss
 
-def compressed_sgd(params, lr=0.01, rand_zero=True, num_bits=2,
-                decay_max=1.0, decay_min=1.0, **kwargs):
+def compressed_sgd(params, lr, rand_zero, num_bits,
+                decay_max, decay_min, num_workers, **kwargs):
     return CompressedSGD(params=params, lr=lr, rand_zero=rand_zero,
-                num_bits=num_bits, decay_max=decay_max, decay_min=decay_min)
+                num_bits=num_bits, decay_max=decay_max, decay_min=decay_min, num_workers=num_workers)
