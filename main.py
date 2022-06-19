@@ -14,6 +14,7 @@ from matplotlib import pyplot as plt
 
 def _plot(histories, args):
     print(histories)
+    plt.subplots(squeeze = false)
 
 
     file = 'sample.png'
