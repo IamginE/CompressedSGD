@@ -78,18 +78,19 @@ class Trainer():
         num_correct = 0
         total_loss = 0.0
         num_inputs = 0
-        for batch_idx, (inputs, targets) in \
-            tqdm(enumerate(self.eval_loader), desc='Evaluate', total=len(self.eval_loader)):
-            _inputs = inputs.cuda() if cuda_available else inputs
-            _targets = targets.cuda() if cuda_available else targets
-            out = self.model(_inputs)
+        with torch.no_grad():
+            for batch_idx, (inputs, targets) in \
+                tqdm(enumerate(self.eval_loader), desc='Evaluate', total=len(self.eval_loader)):
+                _inputs = inputs.cuda() if cuda_available else inputs
+                _targets = targets.cuda() if cuda_available else targets
+                out = self.model(_inputs)
 
-            loss = self.loss(out, _targets)
-            preds = out.argmax(dim=1)
-            num_correct += (preds == _targets).sum().item()
-            total_loss += loss.item() * inputs.size(0)
-            num_inputs += inputs.size(0)
-        total_loss /= float(num_inputs)
-        accuracy = (num_correct / float(num_inputs)) * 100
+                loss = self.loss(out, _targets)
+                preds = out.argmax(dim=1)
+                num_correct += (preds == _targets).sum().item()
+                total_loss += loss.item() * inputs.size(0)
+                num_inputs += inputs.size(0)
+            total_loss /= float(num_inputs)
+            accuracy = (num_correct / float(num_inputs)) * 100
         self.model.train()
         return total_loss, accuracy
