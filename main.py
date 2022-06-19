@@ -25,7 +25,7 @@ def _plot(histories, args):
             for i in range(len(args.lr)):
                 for j in range(len(args.weight_decay)):
                     df = pd.DataFrame(histories[(args.lr[i], args.weight_decay[j])][metric], columns = [i for i in range (-2**(args.num_bits-1), 2**(args.num_bits-1)+1)])
-                    df.plot(kind='bar', stacked=True, ax = axs[i, j], title = f'bin usage, lr: {args.lr[i]}, beta: {args.weight_decay[j]}, binning: {args.binning}')
+                    df.plot(kind='bar', stacked=True, ax = axs[i, j], xticks = [k*100 for k in range(np.shape(histories[(args.lr[i], args.weight_decay[j])][metric])[0]//100+1)], title = f'bin usage, lr: {args.lr[i]}, beta: {args.weight_decay[j]}, binning: {args.binning}')
 
             plt.tight_layout()
             plt.savefig(ospj(args.log_folder,metric+'.png'))
