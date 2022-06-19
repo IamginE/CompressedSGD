@@ -25,13 +25,14 @@ def get_configs():
     parser.add_argument('--lr', nargs='+',
                         type=float, default=[0.01, 0.001, 0.0005, 0.0001, 0.00005])
     parser.add_argument('--weight_decay', nargs='+',
-                        type=float, default=[1, 0.8, 0.5, 0.3, 0.1] )
+                        type=float, default=[1.0] )
     parser.add_argument('--lr_decay', type=float)
     parser.add_argument('--binning', type=str, default=None)
     parser.add_argument('--num_bits', default=2, type=int)
     parser.add_argument('--num_workers', default=1, type=int)
     parser.add_argument('--batchwise_evaluation', default=False, type=str2bool)
     parser.add_argument('--count_usages', default=False, type=str2bool)
+    parser.add_argument('--one_plot_optimizer', default=False, type=str2bool)
 
     args = parser.parse_args()
     args.log_folder = configure_log_folder(args)
