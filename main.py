@@ -1,9 +1,10 @@
 import optimizers
 import models
 import data_loaders
+import pickle
 from trainer import Trainer
 from config import get_configs
-
+from os.path import join as ospj
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -71,6 +72,8 @@ def main():
                 )
             history = trainer.train(args.epochs)
             histories[(lr, weight_decay)] = history
+    with open(ospj(args.log_folder, 'histories.pkl'), 'wb') as f:
+        pickle.dump(f, histories)
     _plot(histories, args)
 if __name__=='__main__':
     main()
