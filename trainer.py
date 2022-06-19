@@ -58,7 +58,7 @@ class Trainer():
                     self.epoch_action()
                     evaluate_timer += 1
                     if self.batchwise_evaluation > 0 :
-                        if evaluate_timer == self.batchwise_evluation:
+                        if evaluate_timer == self.batchwise_evaluation:
                             current_loss, current_acc = self.evaluate()
                             batch_loss_hist.append(current_loss)
                             batch_acc_hist.append(current_acc)
