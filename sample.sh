@@ -6,7 +6,7 @@ python3 main.py \
     --optimizer compressed_sgd \
     --batch_size 64 \
     --epochs 1 \
-    --weight_decay 0.8 \
+    --weight_decay 0.8 0.5\
     --lr 0.01 \
     --num_bits 3 \
     --binning lin \

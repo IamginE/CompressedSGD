@@ -12,7 +12,7 @@ def str2bool(v):
 def get_configs():
     parser = argparse.ArgumentParser()
 
-    # parser.add_argument('--seed', type=int)
+    parser.add_argument('--seed', default=-1, type=int)
     parser.add_argument('--pretrained', default=False, type=str2bool)
     parser.add_argument('--rand_zero', default=True, type=str2bool)
     parser.add_argument('--exp_name', type=str)
@@ -31,6 +31,7 @@ def get_configs():
     parser.add_argument('--num_bits', default=2, type=int)
     parser.add_argument('--num_workers', default=1, type=int)
     parser.add_argument('--batchwise_evaluation', default=False, type=str2bool)
+    parser.add_argument('--count_usages', default=False, type=str2bool)
 
     args = parser.parse_args()
     args.log_folder = configure_log_folder(args)
