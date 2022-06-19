@@ -1,6 +1,8 @@
 from tqdm import tqdm
 from torch import nn
 import torch
+import numpy as np
+from optimizers.compressed_sgd import CompressedSGD
 cuda_available = torch.cuda.is_available()
 class Trainer():
     def __init__(self, model, train_loader, eval_loader, optimizer, batchwise_evaluation=False,
@@ -63,6 +65,11 @@ class Trainer():
             avg_epoch_loss_hist.append(total_loss / float(num_inputs))
             avg_epoch_acc_hist.append(num_correct / float(num_inputs) * 100)
         
+        if isinstance(self.optimizer, CompressedSGD):
+            return {'avg_epoch_loss_hist': avg_epoch_loss_hist, 'avg_epoch_acc_hist': avg_epoch_acc_hist, 
+                'batch_loss_hist': batch_loss_hist, 'batch_acc_hist': batch_acc_hist, 
+                'bin_usage': np.array(self.optimizer.bin_counts)}
+
         return {'avg_epoch_loss_hist': avg_epoch_loss_hist, 'avg_epoch_acc_hist': avg_epoch_acc_hist, 
                 'batch_loss_hist': batch_loss_hist, 'batch_acc_hist': batch_acc_hist}
     

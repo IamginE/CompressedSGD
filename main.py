@@ -1,6 +1,10 @@
 import optimizers
 import models
 import data_loaders
+import torch
+import numpy as np
+import pandas as pd
+import random
 import pickle
 from trainer import Trainer
 from config import get_configs
@@ -10,26 +14,46 @@ from matplotlib import pyplot as plt
 
 def _plot(histories, args):
     print(histories)
+    plt.subplots(squeeze = False)
 
 
     file = 'sample.png'
     metrics = histories[(args.lr[0], args.weight_decay[0])].keys()
     for metric in metrics:
-        sample_history = histories[(args.lr[0], args.weight_decay[0])][metric]
-        x = np.linspace(1, len(sample_history),
-                     num = len(sample_history))
-        fig, axs = plt.subplots(len(args.lr), len(args.weight_decay), figsize=(20, 15))
-        for i in range(len(args.lr)):
-            for j in range(len(args.weight_decay)):
-                axs[i, j].plot(x, histories[(args.lr[i], args.weight_decay[j])][metric])
-                # axs[i, j].set_ylim([0, 4])
-                axs[i, j].title.set_text(f'lr: {args.lr[i]}, beta: {args.weight_decay[j]}')
+        if metric == 'bin_usage':
+            fig, axs = plt.subplots(len(args.lr), len(args.weight_decay), figsize=(20,15))
 
-        plt.tight_layout()
-        plt.savefig(metric+file)
+            for i in range(len(args.lr)):
+                for j in range(len(args.weight_decay)):
+                    df = pd.DataFrame([(args.lr[i], args.weight_decay[j])][metric], columns = [i for i in range (-2**(args.num_bits-1), 2**(args.num_bits-1)+1)])
+                    df.plot(kind='bar', stacked=True, ax = axs[i, j], title = f'bin usage, lr: {args.lr[i]}, beta: {args.weight_decay[j]}, binning: {args.binning}')
+
+            plt.tight_layout()
+            plt.savefig(ospj(args.log_folder,metric+'.png'))
+
+        else:
+            sample_history = histories[(args.lr[0], args.weight_decay[0])][metric]
+            x = np.linspace(1, len(sample_history),
+                        num = len(sample_history))
+            fig, axs = plt.subplots(len(args.lr), len(args.weight_decay), figsize=(20, 15))
+            for i in range(len(args.lr)):
+                for j in range(len(args.weight_decay)):
+                    axs[i, j].plot(x, histories[(args.lr[i], args.weight_decay[j])][metric])
+                    # axs[i, j].set_ylim([0, 4])
+                    axs[i, j].title.set_text(f'lr: {args.lr[i]}, beta: {args.weight_decay[j]}')
+
+            plt.tight_layout()
+            plt.savefig(ospj(args.log_folder,metric+'.png'))
 
 def main():
     args = get_configs()
+    print(args)
+
+    # set random seeds
+    if args.seed > 0:
+        torch.manual_seed(args.seed)
+        np.random.seed(args.seed)
+        random.seed(args.seed)
 
     train_loader = data_loaders.__dict__[args.dataset](
             root=args.dataset_root,
@@ -61,7 +85,8 @@ def main():
                     num_bits=args.num_bits, 
                     rand_zero=args.rand_zero,
                     num_workers=args.num_workers,
-                    binning=args.binning
+                    binning=args.binning,
+                    count_usages=args.count_usages
                 )
             trainer = Trainer(model=model,
                     train_loader=train_loader,
