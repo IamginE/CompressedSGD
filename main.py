@@ -20,12 +20,12 @@ def _plot(histories, args):
     file = 'sample.png'
     metrics = histories[(args.lr[0], args.weight_decay[0])].keys()
     for metric in metrics:
-        if metric == 'bin_usage':
-            fig, axs = plt.subplots(len(args.lr), len(args.weight_decay), figsize=(20,15))
+        if metric == 'bin_usage' and args.count_usages:
+            fig, axs = plt.subplots(len(args.lr), len(args.weight_decay), figsize=(20,15), squeeze=False)
 
             for i in range(len(args.lr)):
                 for j in range(len(args.weight_decay)):
-                    df = pd.DataFrame([(args.lr[i], args.weight_decay[j])][metric], columns = [i for i in range (-2**(args.num_bits-1), 2**(args.num_bits-1)+1)])
+                    df = pd.DataFrame(histories[(args.lr[i], args.weight_decay[j])][metric], columns = [i for i in range (-2**(args.num_bits-1), 2**(args.num_bits-1)+1)])
                     df.plot(kind='bar', stacked=True, ax = axs[i, j], title = f'bin usage, lr: {args.lr[i]}, beta: {args.weight_decay[j]}, binning: {args.binning}')
 
             plt.tight_layout()
@@ -35,7 +35,7 @@ def _plot(histories, args):
             sample_history = histories[(args.lr[0], args.weight_decay[0])][metric]
             x = np.linspace(1, len(sample_history),
                         num = len(sample_history))
-            fig, axs = plt.subplots(len(args.lr), len(args.weight_decay), figsize=(20, 15))
+            fig, axs = plt.subplots(len(args.lr), len(args.weight_decay), figsize=(20, 15), squeeze=False)
             for i in range(len(args.lr)):
                 for j in range(len(args.weight_decay)):
                     axs[i, j].plot(x, histories[(args.lr[i], args.weight_decay[j])][metric])
@@ -98,7 +98,7 @@ def main():
             history = trainer.train(args.epochs)
             histories[(lr, weight_decay)] = history
     with open(ospj(args.log_folder, 'histories.pkl'), 'wb') as f:
-        pickle.dump(f, histories)
+        pickle.dump(histories, f)
     _plot(histories, args)
 if __name__=='__main__':
     main()
