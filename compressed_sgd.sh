@@ -3,11 +3,11 @@ BATCH_SIZE=64
 EPOCHS=1
 SEED=1917
 FULL_EVAL_INTERVAL=-1
-NUM_BITS=2
+NUM_BITS=3
 BINNING=lin
 python3 main.py \
-    --weight_decay 1.0 0.8 0.7 0.5 0.3 \
-    --lr 0.003 0.001 0.0005 0.0001 \
+    --weight_decay 1.0 0.9 0.7 0.5 0.3 \
+    --lr 0.003 0.001 0.0005 0.0001\
     --num_bits ${NUM_BITS} \
     --binning ${BINNING} \
     --count_usages True \
