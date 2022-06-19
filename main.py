@@ -14,7 +14,6 @@ from matplotlib import pyplot as plt
 
 def _plot(histories, args):
     print(histories)
-    plt.subplots(squeeze = False)
 
 
     file = 'sample.png'
@@ -32,18 +31,39 @@ def _plot(histories, args):
             plt.savefig(ospj(args.log_folder,metric+'.png'))
 
         else:
-            sample_history = histories[(args.lr[0], args.weight_decay[0])][metric]
-            x = np.linspace(1, len(sample_history),
-                        num = len(sample_history))
-            fig, axs = plt.subplots(len(args.lr), len(args.weight_decay), figsize=(20, 15), squeeze=False)
-            for i in range(len(args.lr)):
-                for j in range(len(args.weight_decay)):
-                    axs[i, j].plot(x, histories[(args.lr[i], args.weight_decay[j])][metric])
-                    # axs[i, j].set_ylim([0, 4])
-                    axs[i, j].title.set_text(f'lr: {args.lr[i]}, beta: {args.weight_decay[j]}')
+            if args.one_plot_optimizer:
+                sample_history = histories[(args.lr[0], args.weight_decay[0])][metric]
+                x = np.linspace(1, len(sample_history),
+                            num = len(sample_history))
+                fig, axs = plt.subplots(1, 1, figsize=(20, 15), squeeze=False)
+                for i in range(len(args.lr)):
+                    for j in range(len(args.weight_decay)):
+                        axs[0, 0].plot(x, histories[(args.lr[i], args.weight_decay[j])][metric])
+                        # axs[i, j].set_ylim([0, 4])
+                        if args.optimizer not in ["compressed_sgd", "compressed_sgd_vote"]:
+                            axs[0, 0].legend(handles = args.lr[i])
+                        else:
+                            axs[0, 0].legend(handles = (args.lr[i], args.lr[j]))
 
-            plt.tight_layout()
-            plt.savefig(ospj(args.log_folder,metric+'.png'))
+                plt.tight_layout()
+                plt.savefig(ospj(args.log_folder,metric+'.png'))
+            
+            else:
+                sample_history = histories[(args.lr[0], args.weight_decay[0])][metric]
+                x = np.linspace(1, len(sample_history),
+                            num = len(sample_history))
+                fig, axs = plt.subplots(len(args.lr), len(args.weight_decay), figsize=(20, 15), squeeze = False)
+                for i in range(len(args.lr)):
+                    for j in range(len(args.weight_decay)):
+                        axs[i, j].plot(x, histories[(args.lr[i], args.weight_decay[j])][metric])
+                        # axs[i, j].set_ylim([0, 4])
+                        if args.optimizer not in ["compressed_sgd", "compressed_sgd_vote"]:
+                            axs[i, j].title.set_text(f'lr: {args.lr[i]}')
+                        else:
+                            axs[i, j].title.set_text(f'lr: {args.lr[i]}, beta: {args.weight_decay[j]}')
+
+                plt.tight_layout()
+                plt.savefig(ospj(args.log_folder,metric+'.png'))
 
 def main():
     args = get_configs()
