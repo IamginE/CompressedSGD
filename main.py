@@ -13,7 +13,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 def _plot(histories, args):
-    print(histories)
+    # print(histories)
 
 
     file = 'sample.png'
@@ -35,15 +35,14 @@ def _plot(histories, args):
                 sample_history = histories[(args.lr[0], args.weight_decay[0])][metric]
                 x = np.linspace(1, len(sample_history),
                             num = len(sample_history))
-                fig, axs = plt.subplots(1, 1, figsize=(20, 15), squeeze=False)
+                fig, axs = plt.subplots(1, 1, figsize=(10, 8), squeeze=False)
                 for i in range(len(args.lr)):
                     for j in range(len(args.weight_decay)):
-                        axs[0, 0].plot(x, histories[(args.lr[i], args.weight_decay[j])][metric])
-                        # axs[i, j].set_ylim([0, 4])
-                        if args.optimizer not in ["compressed_sgd", "compressed_sgd_vote"]:
-                            axs[0, 0].legend(handles = args.lr[i])
-                        else:
-                            axs[0, 0].legend(handles = (args.lr[i], args.lr[j]))
+                      label = str(args.lr[i] if args.optimizer not in ["compressed_sgd", "compressed_sgd_vote"] else (args.lr[i], args.weight_decay.lr[j]))
+                      axs[0, 0].plot(x, histories[(args.lr[i], args.weight_decay[j])][metric], 
+                          label=label)
+                      axs[0,0].legend(loc="best")
+
 
                 plt.tight_layout()
                 plt.savefig(ospj(args.log_folder,metric+'.png'))
