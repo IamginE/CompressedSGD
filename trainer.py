@@ -5,7 +5,7 @@ import numpy as np
 from optimizers.compressed_sgd import CompressedSGD
 cuda_available = torch.cuda.is_available()
 class Trainer():
-    def __init__(self, model, train_loader, eval_loader, optimizer, batchwise_evaluation=False,
+    def __init__(self, model, train_loader, eval_loader, optimizer, batchwise_evaluation=-1,
                  plot=True, num_workers=1, **kwargs):
         super(Trainer, self).__init__()
         self.model = model.cuda() if cuda_available else model
@@ -34,6 +34,7 @@ class Trainer():
             num_correct = 0
             num_inputs = 0
             total_loss = 0.0
+            evaluate_timer = 0
             for batch_idx, (inputs, targets) in \
                 tqdm(enumerate(self.train_loader), desc='Epoch', total=len(self.train_loader)):
                 batch_size = inputs.size(0)
@@ -55,10 +56,13 @@ class Trainer():
                 self.batch_action(batch_idx%self.num_workers)
                 if batch_idx%self.num_workers == self.num_workers-1:
                     self.epoch_action()
-                    if self.batchwise_evaluation:
-                        current_loss, current_acc = self.evaluate()
-                        batch_loss_hist.append(current_loss)
-                        batch_acc_hist.append(current_acc)
+                    evaluate_timer += 1
+                    if self.batchwise_evaluation > 0 :
+                        if evaluate_timer == self.batchwise_evluation:
+                            current_loss, current_acc = self.evaluate()
+                            batch_loss_hist.append(current_loss)
+                            batch_acc_hist.append(current_acc)
+                            evaluate_timer=0
                     else:
                         batch_loss_hist.append(curr_loss)
                         batch_acc_hist.append(curr_correct/ float(batch_size) * 100)

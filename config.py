@@ -30,7 +30,7 @@ def get_configs():
     parser.add_argument('--binning', type=str, default=None)
     parser.add_argument('--num_bits', default=2, type=int)
     parser.add_argument('--num_workers', default=1, type=int)
-    parser.add_argument('--batchwise_evaluation', default=False, type=str2bool)
+    parser.add_argument('--batchwise_evaluation', default=-1, type=int)
     parser.add_argument('--count_usages', default=False, type=str2bool)
     parser.add_argument('--one_plot_optimizer', default=False, type=str2bool)
 
