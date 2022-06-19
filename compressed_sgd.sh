@@ -10,6 +10,7 @@ python3 main.py \
     --lr 0.003 0.001 0.0005 0.0001 \
     --num_bits ${NUM_BITS} \
     --binning ${BINNING} \
+    --count_usages True \
     --batchwise_evaluation ${FULL_EVAL_INTERVAL} \
     --exp_name ${METHOD}_B${BATCH_SIZE}_n${NUM_BITS}_l${BINNING}$_e${EPOCHS}_EvalInterval${FULL_EVAL_INTERVAL}_Seed${SEED} \
     --model vanilla_cnn \
