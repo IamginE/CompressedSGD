@@ -84,7 +84,7 @@ class Trainer():
         num_inputs = 0
         with torch.no_grad():
             for batch_idx, (inputs, targets) in \
-                tqdm(enumerate(self.eval_loader), desc='Evaluate', total=len(self.eval_loader)):
+                enumerate(self.eval_loader):
                 _inputs = inputs.cuda() if cuda_available else inputs
                 _targets = targets.cuda() if cuda_available else targets
                 out = self.model(_inputs)
