@@ -71,8 +71,8 @@ class CompressedSGD(optim.Optimizer):
           grad[grad > 0] = torch.ceil((2**(self.num_bits-1)) * torch.div(grad[grad > 0], self.max_grad_vals[p][grad > 0]))
           grad[grad < 0] = - torch.ceil((2**(self.num_bits-1)) * torch.div(grad[grad < 0], self.min_grad_vals[p][grad < 0]))
         elif self.binning == 'exp':
-          grad[grad > 0] = torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(grad[grad > 0] + 1), torch.log(self.max_grad_vals[p][grad > 0] + 1)))) # log_e(x+1)/log_e(maxgrad+1) = log_(maxgrad+1)(x+1)
-          grad[grad < 0] = -torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(-grad[grad < 0] + 1), torch.log(-self.min_grad_vals[p][grad < 0] + 1))))
+          grad[grad > 0] = torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(grad[grad > 0] + 1.1), torch.log(self.max_grad_vals[p][grad > 0] + 1.1)))) # log_e(x+1)/log_e(maxgrad+1) = log_(maxgrad+1)(x+1)
+          grad[grad < 0] = -torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(-grad[grad < 0] + 1.1), torch.log(-self.min_grad_vals[p][grad < 0] + 1.1))))
         
         # randomise zero gradients to ±1
         if self.rand_zero:
