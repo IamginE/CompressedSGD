@@ -1,0 +1,16 @@
+plot('batch_loss_hist', 
+     files=['./logs/sign_sgd_B64_e1_EvalInterval50_Seed1917/histories.pkl',
+      './logs/sign_sgd_B64_e1_EvalInterval50_Seed1917/histories.pkl',
+      './logs/compressed_sgd_B64_n2_llin1_EvalInterval50_Seed1917/histories.pkl',
+      './logs/compressed_sgd_B64_n2_llin1_EvalInterval50_Seed1917/histories.pkl',
+      './logs/compressed_sgd_B64_n2_llin1_EvalInterval50_Seed1917/histories.pkl',
+      './logs/compressed_sgd_B64_n2_llin1_EvalInterval50_Seed1917/histories.pkl'],
+     keys=[(0.001, 1), (0.0005, 1),
+           (0.001, 1.0), (0.001, 0.9),
+           (0.0005, 1.0), (0.0005, 0.9)
+           ],
+     names=['signSGD lr=0.001', 'signSGD lr=0.0005',
+            'compressedSGD 2bins lr=0.001, decay=1.0', 'compressedSGD 2bins lr=0.001, decay=0.9',
+            'compressedSGD 2bins lr=0.0005, decay=1.0', 'compressedSGD 2bins lr=0.0005, decay=0.9'],
+     out='cSGD_2bits_sign.png',
+     linspace_mul=50)

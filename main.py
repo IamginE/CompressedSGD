@@ -40,7 +40,7 @@ def _plot(histories, args):
                 fig, axs = plt.subplots(1, 1, figsize=(10, 8), squeeze=False)
                 for i in range(len(args.lr)):
                     for j in range(len(args.weight_decay)):
-                      label = str(args.lr[i] if args.optimizer not in ["compressed_sgd", "compressed_sgd_vote"] else (args.lr[i], args.weight_decay.lr[j]))
+                      label = str(args.lr[i] if args.optimizer not in ["compressed_sgd", "compressed_sgd_vote"] else (args.lr[i], args.weight_decay[j]))
                       axs[0, 0].plot(x, histories[(args.lr[i], args.weight_decay[j])][metric], 
                           label=label)
                       axs[0,0].legend(loc="best")

@@ -105,8 +105,8 @@ class CompressedSGDVote(optim.Optimizer):
                 grad[grad > 0] = torch.ceil((2**(self.num_bits-1)) * torch.div(grad[grad > 0], self.max_grad_vals[i][p][grad > 0]))
                 grad[grad < 0] = - torch.ceil((2**(self.num_bits-1)) * torch.div(grad[grad < 0], self.min_grad_vals[i][p][grad < 0]))
             elif self.binning == 'exp':
-                grad[grad > 0] = torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(grad[grad > 0] + 1), torch.log(self.max_grad_vals[i][p][grad > 0] + 1)))) # log_e(x+1)/log_e(maxgrad+1) = log_(maxgrad+1)(x+1)
-                grad[grad < 0] = -torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(-grad[grad < 0] + 1), torch.log(-self.min_grad_vals[i][p][grad < 0] + 1))))
+                grad[grad > 0] = torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(grad[grad > 0] + 1.0001), torch.log(self.max_grad_vals[i][p][grad > 0] + 1.0001)))) # log_e(x+1)/log_e(maxgrad+1) = log_(maxgrad+1)(x+1)
+                grad[grad < 0] = -torch.ceil((2**(self.num_bits-1)) * (torch.div(torch.log(-grad[grad < 0] + 1.0001), torch.log(-self.min_grad_vals[i][p][grad < 0] + 1.0001))))
 
             if self.rand_zero:
               grad[grad==0] = torch.randint_like(grad[grad==0], low=0, high=2)*2 - 1
