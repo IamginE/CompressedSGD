@@ -154,29 +154,22 @@ def optimize_with_sgd(data, best_objective, only_sign=False, rand_zero=True):
 
 
 def optimize_lm(data=(default_A, default_b), optimizer="SGD"):
-    # DESCRIPTION:
-    # This function trains a simple linear regression model on
-    # the given dataset using the chosen optimizer under a
-    # least-squares loss. It reports how long it takes, and
-    # what the final loss is.
+    """
+        This function trains a simple linear regression model on the given dataset using the chosen
+        optimizer under a least-squares loss. It reports how long it takes, and what the final loss is.
 
-    # INPUT:
-    # data: A tuple of (A, b) where A is an n×d matrix
-    # containing the values of the independent variables and a
-    # column of ones, and b is an n×1 vector containing the
-    # values of the dependent variable. By default, it uses
-    # the dataset provided in the "solution" folder (check
-    # optml_directory to see where it is).
-    #
-    # optimizer: A string indicating what optimizer should be
-    # used. It should be one of these three options:
-    #   1. 'SGD' (default): Stochastic Gradient Descent
-    #   2. 'signSGD': The signSGD algorithm in its vanilla form
-    #   3. 'signSGDplus': The modified version of signSGD
+        :param data: A tuple of (A, b) where A is an n×d matrix containing the values of the independent
+        variables and a column of ones, and b is an n×1 vector containing the values of the dependent
+        variable. By default, it uses the dataset provided in the "OptML-ex06-solution" folder (check
+        optml_directory to see where it is).
+        :param optimizer: A string indicating what optimizer should be used. It should be one of these three
+        options:
+        1. 'SGD' (default): Stochastic Gradient Descent
+        2. 'signSGD': The signSGD algorithm in its vanilla form
+        3. 'signSGDplus': The modified version of signSGD
 
-    # OUTPUT:
-    # No output (based on the chosen optimizer, calls the
-    # proper function)
+        :return: No output (based on the chosen optimizer, calls the proper function)
+    """
 
     A, b = data
 
@@ -186,17 +179,14 @@ def optimize_lm(data=(default_A, default_b), optimizer="SGD"):
     best_objective = full_objective(b, A, x_star)
 
     if optimizer == "SGD":
-        optimize_with_sgd(data, best_objective, only_sign=False,
-                          rand_zero=False)
+        optimize_with_sgd(data, best_objective, only_sign=False, rand_zero=False)
     elif optimizer == "signSGD":
-        optimize_with_sgd(data, best_objective, only_sign=True,
-                          rand_zero=True)
+        optimize_with_sgd(data, best_objective, only_sign=True, rand_zero=True)
     elif optimizer == "signSGDplus":
         # TODO
         return
     else:
-        raise ValueError(f"Cannot use {optimizer}; invalid "
-              f"optimizer name!")
+        raise ValueError(f"Cannot use {optimizer}; invalid optimizer name!")
 
 
 optimize_lm()
