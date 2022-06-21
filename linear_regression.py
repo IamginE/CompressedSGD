@@ -4,8 +4,7 @@ import numpy as np
 import datetime
 import torch
 
-optml_directory = "F:\\University\\Saarland\\Optimization for Machine Learning\\Project\\OptML-Repo\\labs\\ex06\\" \
-                  "solution"
+optml_directory = "OptML-ex06-solution"
 os.chdir(optml_directory)
 sys.path.insert(1, optml_directory)
 
@@ -181,8 +180,7 @@ def try_model_on_data(data=(default_A, default_b), optimizer="SGD"):
 
     A, b = data
 
-    if A.shape[0] != b.shape[0]:
-        print("Error: A and b have different number of rows!")
+    assert A.shape[0] == b.shape[0], "A and b have different number of rows!"
 
     x_star = np.linalg.solve(A.T @ A, A.T @ b)
     best_objective = full_objective(b, A, x_star)
@@ -197,7 +195,7 @@ def try_model_on_data(data=(default_A, default_b), optimizer="SGD"):
         # TODO
         return
     else:
-        print(f"Error: Cannot use {optimizer}! Invalid "
+        raise ValueError(f"Cannot use {optimizer}; invalid "
               f"optimizer name!")
 
 
