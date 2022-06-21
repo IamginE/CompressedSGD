@@ -153,7 +153,7 @@ def optimize_with_sgd(data, best_objective, only_sign=False, rand_zero=True):
     print(f"Final value of f(x) - f(x*) = {(sgd_objectives_dec_gamma_mu[-1] - best_objective):.5f}")
 
 
-def try_model_on_data(data=(default_A, default_b), optimizer="SGD"):
+def optimize_lm(data=(default_A, default_b), optimizer="SGD"):
     # DESCRIPTION:
     # This function trains a simple linear regression model on
     # the given dataset using the chosen optimizer under a
@@ -199,5 +199,5 @@ def try_model_on_data(data=(default_A, default_b), optimizer="SGD"):
               f"optimizer name!")
 
 
-try_model_on_data()
-try_model_on_data(optimizer="signSGD")
+optimize_lm()
+optimize_lm(optimizer="signSGD")
