@@ -3,6 +3,7 @@ from torch import nn
 import torch
 import numpy as np
 from optimizers.compressed_sgd import CompressedSGD
+from optimizers.compressed_sgd_vote import CompressedSGDVote
 cuda_available = torch.cuda.is_available()
 class Trainer():
     def __init__(self, model, train_loader, eval_loader, optimizer, batchwise_evaluation=-1,
