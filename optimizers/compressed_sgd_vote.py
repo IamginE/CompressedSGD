@@ -113,12 +113,14 @@ class CompressedSGDVote(optim.Optimizer):
 
             if self.rand_zero:
               grad[grad==0] = torch.randint_like(grad[grad==0], low=0, high=2)*2 - 1
-              assert not (grad==0).any()
             aggr_grad = torch.clone(grad) if aggr_grad is None else torch.add(aggr_grad, grad)
 
         # simulate the voting
         aggr_grad[aggr_grad > 0] = torch.ceil(torch.div(aggr_grad[aggr_grad > 0], torch.tensor(count)))
         aggr_grad[aggr_grad < 0] = torch.floor(torch.div(aggr_grad[aggr_grad < 0], torch.tensor(count)))
+        if self.rand_zero:
+          aggr_grad[aggr_grad==0] = torch.randint_like(aggr_grad[aggr_grad==0], low=0, high=2)*2 - 1
+          
         # make update
         p.data -= group['lr'] * aggr_grad
         if self.count_usages:
