@@ -7,7 +7,7 @@ class CompressedSGDVote(optim.Optimizer):
   r"""Generalized gradient compression using binning.
   """
   def __init__(self, params, lr, rand_zero, num_bits, decay_max, 
-               decay_min, num_workers, binning='lin'):
+               decay_min, num_workers, count_usages, binning='lin'):
 
     if num_bits <= 0 or type(num_bits) != int:
         raise ValueError("Expected num_bits to be a positive integer.")
@@ -29,6 +29,8 @@ class CompressedSGDVote(optim.Optimizer):
     self.num_bits = num_bits
     self.num_workers = num_workers
     self.binning = binning
+    self.count_usages = count_usages
+    self.bin_counts = []
     
     for i in range(num_workers):
       for group in self.param_groups:
@@ -84,6 +86,7 @@ class CompressedSGDVote(optim.Optimizer):
       loss = closure()
 
     # parameter update
+    bin_count = torch.tensor([0 for i in range(2**(self.num_bits) + 1)])
     for group in self.param_groups:
       for p in group['params']:
         if p.grad is None:
@@ -118,11 +121,16 @@ class CompressedSGDVote(optim.Optimizer):
         aggr_grad[aggr_grad < 0] = torch.floor(torch.div(aggr_grad[aggr_grad < 0], torch.tensor(count)))
         # make update
         p.data -= group['lr'] * aggr_grad
+        if self.count_usages:
+          bin_count = torch.add(bin_count, torch.bincount(torch.flatten(torch.clone(aggr_grad).cpu().type(torch.int64)) + 2**(self.num_bits-1), minlength=2**self.num_bits+1))
 
     self.used = [False for i in range(self.num_workers)]
+
+    if self.count_usages:
+      self.bin_counts.append(bin_count.numpy())
     return loss
 
 def compressed_sgd_vote(params, lr, rand_zero, num_bits,
-                decay_max, decay_min, num_workers, binning, **kwargs):
+                decay_max, decay_min, num_workers, binning, count_usages, **kwargs):
     return CompressedSGDVote(params=params, lr=lr, rand_zero=rand_zero,
-                num_bits=num_bits, decay_max=decay_max, decay_min=decay_min, num_workers=num_workers, binning=binning)
+                num_bits=num_bits, decay_max=decay_max, decay_min=decay_min, num_workers=num_workers, count_usages=count_usages, binning=binning)

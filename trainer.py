@@ -69,7 +69,7 @@ class Trainer():
             avg_epoch_loss_hist.append(total_loss / float(num_inputs))
             avg_epoch_acc_hist.append(num_correct / float(num_inputs) * 100)
         
-        if isinstance(self.optimizer, CompressedSGD):
+        if isinstance(self.optimizer, CompressedSGD) or isinstance(self.optimizer, CompressedSGDVote):
             return {'avg_epoch_loss_hist': avg_epoch_loss_hist, 'avg_epoch_acc_hist': avg_epoch_acc_hist, 
                 'batch_loss_hist': batch_loss_hist, 'batch_acc_hist': batch_acc_hist, 
                 'bin_usage': np.array(self.optimizer.bin_counts)}
