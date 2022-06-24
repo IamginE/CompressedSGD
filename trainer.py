@@ -31,11 +31,11 @@ class Trainer():
         avg_epoch_loss_hist = [] # Average of batch_accs for each epoch
         batch_loss_hist = [] # Exact loss over the entire dataset after each batch
         batch_acc_hist = [] # Exact acc over the entire dataset after each batch
+        evaluate_timer = 0
         for ep in range(epochs):
             num_correct = 0
             num_inputs = 0
             total_loss = 0.0
-            evaluate_timer = 0
             for batch_idx, (inputs, targets) in \
                 tqdm(enumerate(self.train_loader), desc='Epoch', total=len(self.train_loader)):
                 batch_size = inputs.size(0)
@@ -59,11 +59,10 @@ class Trainer():
                     self.epoch_action()
                     evaluate_timer += 1
                     if self.batchwise_evaluation > 0 :
-                        if evaluate_timer == self.batchwise_evaluation:
+                        if evaluate_timer % self.batchwise_evaluation == 0:
                             current_loss, current_acc = self.evaluate()
                             batch_loss_hist.append(current_loss)
                             batch_acc_hist.append(current_acc)
-                            evaluate_timer=0
                     else:
                         batch_loss_hist.append(curr_loss)
                         batch_acc_hist.append(curr_correct/ float(batch_size) * 100)
