@@ -12,7 +12,7 @@ def str2bool(v):
 def get_configs():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--seed', default=-1, help="Custom seed for initialization", type=int)
+    parser.add_argument('--seed', default=-1, help="Custom seed for initialization. Set to -1 to disable it.", type=int)
     parser.add_argument('--rand_zero', default=True, type=str2bool)
     parser.add_argument('--exp_name', type=str)
     parser.add_argument('--model', help='Currently just vanilla_cnn is accepted'type=str)
