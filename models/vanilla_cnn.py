@@ -18,7 +18,6 @@ class VanillaCnn(nn.Module):
 
     self.dropout1 = nn.Dropout(p=0.5)
     self.fc1 = nn.Linear(14*14*32, 512)
-    # self.dropout2 = nn.Dropout(p=0.5)
     self.fc2 = nn.Linear(512, num_classes)
   
   def forward(self, x):
@@ -29,7 +28,6 @@ class VanillaCnn(nn.Module):
       x = self.dropout1(x)
       x = self.fc1(x)
       x = F.relu(x)
-      # x = self.dropout2(x)
       x = self.fc2(x)
       return(x)
 

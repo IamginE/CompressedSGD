@@ -35,7 +35,7 @@ def _plot(histories, args):
                 sample_history = histories[(args.lr[0], args.weight_decay[0])][metric]
                 x = np.linspace(1, len(sample_history),
                             num = len(sample_history))
-                if args.batchwise_evaluation > 1:
+                if args.batchwise_evaluation > 1 and metric in ["batch_loss_hist", "batch_acc_hist"]:
                     x = x * args.batchwise_evaluation
                 fig, axs = plt.subplots(1, 1, figsize=(10, 8), squeeze=False)
                 for i in range(len(args.lr)):
