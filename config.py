@@ -15,10 +15,10 @@ def get_configs():
     parser.add_argument('--seed', default=-1, help="Custom seed for initialization. Set to -1 to disable it.", type=int)
     parser.add_argument('--rand_zero', default=True, type=str2bool)
     parser.add_argument('--exp_name', type=str)
-    parser.add_argument('--model', help='Currently just vanilla_cnn is accepted'type=str)
+    parser.add_argument('--model', help='Currently just vanilla_cnn is accepted', type=str)
     parser.add_argument('--dataset', help='Currently just MNIST is accepted', type=str)
-    parser.add_argument('--dataset_root', help='Root dir of the dataset. If not exist, it will be downloaded.'type=str)
-    parser.add_argument('--optimizer', help='Choose from [sgd, sign_sgd, compressed_sgd, compressed_sgd_vote]'type=str)
+    parser.add_argument('--dataset_root', help='Root dir of the dataset. If not exist, it will be downloaded.',type=str)
+    parser.add_argument('--optimizer', help='Choose from [sgd, sign_sgd, compressed_sgd, compressed_sgd_vote]', type=str)
     parser.add_argument('--batch_size', type=int)
     parser.add_argument('--epochs', type=int)
     parser.add_argument('--lr', help='space-separated list of learning rates.', nargs='+',
@@ -26,7 +26,7 @@ def get_configs():
     parser.add_argument('--weight_decay', help='space-separated list of min-max decays introduced in the report', nargs='+',
                         type=float, default=[1.0] )
     parser.add_argument('--lr_decay', type=float)
-    parser.add_argument('--binning', help='Binning strategy for compressed_sgd. Either use "lin" or "exp".\', type=str, default=None)
+    parser.add_argument('--binning', help='Binning strategy for compressed_sgd. Either use "lin" or "exp".', type=str, default=None)
     parser.add_argument('--num_bits', help='Number of bits to use for binning.', default=2, type=int)
     parser.add_argument('--num_workers', help='Number of workers for voting. Only effects results when compressed_sgd_vote is used as optimzier', default=1, type=int)
     parser.add_argument('--batchwise_evaluation', help='After every worker has received this many batches, an evaluation on the entire training set will be done. Set it to -1 to disable evaluation', default=-1, type=int)
