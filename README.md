@@ -7,7 +7,7 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 ## Use Cases
-1. You can refer to `compressed_sgd.sh` for an example training script. The results will be stored at `./logs` directory. You can find four plots and a pickle file that can later be used to compare different experiments on different metrics with each other.
+1. You can refer to `compressed_sgd.sh` for a sample training script. The results will be stored at `./logs` directory. You can find five plots and a pickle file that can later be used to compare different experiments on different metrics with each other.
 ```bash
 source env/bin/activate
 source compressed_sgd.sh
