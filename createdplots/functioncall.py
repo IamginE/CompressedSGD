@@ -175,3 +175,67 @@ plot('batch_loss_hist',
             'SGD lr=0.5'],
      out='SGD_signSGD.png',
      linspace_mul=50)
+
+
+#Num workers
+plot('avg_epoch_loss_hist', 
+        files=[
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e2_EvalInterval100_Seed1917_Workers1/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e2_EvalInterval100_Seed1917_Workers1/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e4_EvalInterval100_Seed1917_Workers2/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e4_EvalInterval100_Seed1917_Workers2/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e8_EvalInterval100_Seed1917_Workers4/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e8_EvalInterval100_Seed1917_Workers4/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e16_EvalInterval100_Seed1917_Workers8/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e16_EvalInterval100_Seed1917_Workers8/histories.pkl',
+        ],
+        keys=[
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            ],
+        names=[
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=1', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=1',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=2', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=2',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=4', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=4',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=8', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=8',
+            ],
+        out='cSGD_3bits_num_workers_epoch_loss.png',
+        xaxis='Epochs',
+        yaxis='Loss',
+        title='Effect of Worker Count',
+        linspace_mul=1)
+
+plot('batch_loss_hist', 
+        files=[
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e2_EvalInterval100_Seed1917_Workers1/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e2_EvalInterval100_Seed1917_Workers1/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e4_EvalInterval100_Seed1917_Workers2/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e4_EvalInterval100_Seed1917_Workers2/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e8_EvalInterval100_Seed1917_Workers4/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e8_EvalInterval100_Seed1917_Workers4/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e16_EvalInterval100_Seed1917_Workers8/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e16_EvalInterval100_Seed1917_Workers8/histories.pkl',
+        ],
+        keys=[
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            ],
+        names=[
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=1', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=1',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=2', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=2',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=4', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=4',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=8', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=8',
+            ],
+        out='cSGD_3bits_num_workers_batch_loss.png',
+        xaxis='Epochs',
+        yaxis='Loss',
+        title='Effect of Worker Count',
+        linspace_mul=100)
