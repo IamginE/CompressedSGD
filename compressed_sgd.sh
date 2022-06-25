@@ -10,6 +10,7 @@ python3 main.py \
     --weight_decay 1.0 0.9 0.7 0.5 0.3 \
     --lr 0.003 0.001 0.0005 0.0001\
     --num_bits ${NUM_BITS} \
+    --num_workers ${NUM_WORKERS} \
     --binning ${BINNING} \
     --count_usages False \
     --batchwise_evaluation ${FULL_EVAL_INTERVAL} \

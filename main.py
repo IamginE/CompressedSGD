@@ -13,10 +13,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 def _plot(histories, args):
-    # print(histories)
-
-
-    file = 'sample.png'
     metrics = histories[(args.lr[0], args.weight_decay[0])].keys()
     for metric in metrics:
         if metric == 'bin_usage' and args.count_usages:
@@ -59,7 +55,6 @@ def _plot(histories, args):
                 for i in range(len(args.lr)):
                     for j in range(len(args.weight_decay)):
                         axs[i, j].plot(x, histories[(args.lr[i], args.weight_decay[j])][metric])
-                        # axs[i, j].set_ylim([0, 4])
                         if args.optimizer not in ["compressed_sgd", "compressed_sgd_vote"]:
                             axs[i, j].title.set_text(f'lr: {args.lr[i]}')
                         else:

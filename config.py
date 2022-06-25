@@ -36,6 +36,7 @@ def get_configs():
     args = parser.parse_args()
     args.log_folder = configure_log_folder(args)
     args.num_classes = configure_num_classes(args)
+    args.pretrained=False #Corrently not being used. 
     return args
 
 def configure_log_folder(args):
