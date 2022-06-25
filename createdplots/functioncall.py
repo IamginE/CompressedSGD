@@ -239,3 +239,18 @@ plot('batch_loss_hist',
         yaxis='Loss',
         title='Effect of Worker Count',
         linspace_mul=100)
+
+from matplotlib import pyplot as plt
+from PIL import Image
+
+fig, axs = plt.subplots(2, 2, figsize=(20, 20), squeeze=False)
+axs[0,0].imshow(Image.open('./used_data/plots/epochs_decay_lr_all_3bits.png'))
+axs[0,0].axis('off')
+axs[0,1].imshow(Image.open('./used_data/plots/epochs_decay_lr_focused_3bits.png'))
+axs[0,1].axis('off')
+axs[1,0].imshow(Image.open('./used_data/plots/epochs_decay_lr_all_5bits.png'))
+axs[1,0].axis('off')
+axs[1,1].imshow(Image.open('./used_data/plots/epochs_decay_lr_focused_5bits.png'))
+axs[1,1].axis('off')
+plt.subplots_adjust(wspace=0, hspace=0)
+plt.savefig('LRs_Decays.png', bbox_inches='tight')

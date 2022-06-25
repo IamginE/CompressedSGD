@@ -587,7 +587,7 @@ plot('avg_epoch_loss_hist',
 
         ],
     out='./used_data/plots/epochs_decay_lr_all_3bits.png',
-    title='full training loss over 7 epochs for linear binning and 3 bits',
+    title='test loss over 7 epochs for linear binning and 3 bits',
     xaxis='epochs',
     yaxis='(average) loss over the test data',
     linspace_mul=1 
@@ -635,7 +635,7 @@ plot('avg_epoch_loss_hist',
 
         ],
     out='./used_data/plots/epochs_decay_lr_focused_3bits.png',
-    title='full training loss over 7 epochs for linear binning and 3 bits',
+    title='test loss over 7 epochs for linear binning and 3 bits',
     xaxis='epochs',
     yaxis='(average) loss over the test data',
     linspace_mul=1  
@@ -658,9 +658,34 @@ plot('avg_epoch_loss_hist',
             'compressedSGD lr=0.0000625, min-max decay=0.9, 5 bits', 
         ],
     out='./used_data/plots/epochs_5_vs_3bits.png',
-    title='full training loss over 7 epochs for linear binning for 3 and 5 bits',
+    title='test loss over 7 epochs for linear binning for 3 and 5 bits',
     xaxis='epochs',
     yaxis='(average) loss over the test data',
     linspace_mul=1  
 )
 
+plot('batch_loss_hist',
+    files=[  
+        './used_data/comparison/compressed_sgd_B64_n3_llin5_EvalInterval100_Seed1917/histories.pkl',
+        './used_data/comparison/compressed_sgd_B64_n3_llin5_EvalInterval100_Seed1917/histories.pkl',
+        './used_data/num_workers/compressed_sgd_vote_B64_n3_llin20_EvalInterval100_Seed1917_Workers4/histories.pkl',
+        './used_data/num_workers/compressed_sgd_vote_B64_n3_llin20_EvalInterval100_Seed1917_Workers4/histories.pkl'
+        ],
+    keys=[
+        (0.0001, 0.7),
+        (0.0001, 0.3),  
+        (0.0001, 0.7),
+        (0.0001, 0.3)
+    ],
+
+    names=['compressedSGD lr=0.0001, min-max decay=0.7, 3 bits, 1 worker',
+        'compressedSGD lr=0.0001, min-max decay=0.3, 3 bits, 1 worker',
+        'compressedSGD lr=0.0001, min-max decay=0.7, 3 bits, 4 workers', 
+        'compressedSGD lr=0.0001, min-max decay=0.3, 3 bits, 4 workers'
+        ],
+    out='./used_data/plots/epochs_1_vs_4bits.png',
+    title='full training loss over 5 epochs for linear binning, 3 bits 1 vs. 4 workers',
+    xaxis='number of update steps',
+    yaxis='(average) loss over the full training data',
+    linspace_mul=100  
+)
