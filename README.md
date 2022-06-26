@@ -23,15 +23,15 @@ pip install -r requirements.txt
 - You can also refer to `sgd.sh` and `sign_sgd.sh` sample scripts. However, we recommend modifying `compressed_sgd.sh` with `num_bits 1` to simulate SignSGD. This way you can also try different number of workers (Not supported in sign_sgd's original implementaiton.)
 
 We have the following conventions for plotting:
-    - The data is stored in the `histories.pkl` files.
-    - Data is stored as a dictionary with the the keys being the tuple (learning rate, decay) and the metric. 
-    - For methods that do not us min-max decay the, the default parameter is decay=1.0 (gets ignored during training), but needs to be used to get the data.
-    -The following metrics exist: 
-        -- `avg_epoch_loss_hist`: average sample loss per epoch
-        -- `avg_epoch_acc_hist`: sample accuracy per epoch
-        -- `batch_loss_hist`: Either batch loss for each batch, if `batchwise_evaluation <= 0` or full training data loss if `batchwise_evaluation >= 0`
-        -- `batch_acc_hist`: Either batch accuracy for each batch, if `batchwise_evaluation <= 0` or full training data accuracy if `batchwise_evaluation >= 0`
-        -- `bin_usage`: Only applicable for compressedSGD and compressedSGDVote, bin usages for discretiztion. Requires `count_usages = True`
+- The data is stored in the `histories.pkl` files.
+- Data is stored as a dictionary with the the keys being the tuple (learning rate, decay) and the metric. 
+- For methods that do not us min-max decay the, the default parameter is decay=1.0 (gets ignored during training), but needs to be used to get the data.
+- The following metrics exist: 
+- - `avg_epoch_loss_hist`: average sample loss per epoch
+- - `avg_epoch_acc_hist`: sample accuracy per epoch
+- - `batch_loss_hist`: Either batch loss for each batch, if `batchwise_evaluation <= 0` or full training data loss if `batchwise_evaluation >= 0`
+- - `batch_acc_hist`: Either batch accuracy for each batch, if `batchwise_evaluation <= 0` or full training data accuracy if `batchwise_evaluation >= 0`
+- - `bin_usage`: Only applicable for compressedSGD and compressedSGDVote, bin usages for discretiztion. Requires `count_usages = True`
 
 'avg_epoch_loss_hist': avg_epoch_loss_hist, 'avg_epoch_acc_hist': avg_epoch_acc_hist, 
                 'batch_loss_hist': batch_loss_hist, 'batch_acc_hist': batch_acc_hist, 
