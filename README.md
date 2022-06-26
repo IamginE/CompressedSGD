@@ -55,6 +55,6 @@ We have the following conventions for plotting:
 - `--binning`: binning strategy to choose from [lin, exp], only applies to compressedSGD and compressedSGDVote
 - `--num_bits`: number of bits, used to determine the number of bins, only applies to compressedSGD and compressedSGDVote
 - `--num_workers`: number of workers to simulate, only applies to compressedSGDVote
-- `--batchwise_evaluation`: After every worker has received this many batches, an evaluation on the entire training set will be done. Set it to `<= 0` to disable evaluation
+- `--batchwise_evaluation`: After every worker has received this many batches, an evaluation on the entire training set will be done. Set it to `<= 0` to disable evaluation.
 - `--count_usages`: counts bin usages and enables to plot them in the end, only applies to compressedSGD and compressedSGDVote
 - `-one_plot_optimizer`: determins wether the instant plots for a parameter sweep should be plotted together (True) or seperately (False)
