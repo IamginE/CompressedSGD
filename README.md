@@ -42,7 +42,7 @@ We have the following conventions for plotting:
 
 ## Commands
 - `--seed`: fixes random seed
-- `--rand_zero`: only appicable to signSGD
+- `--rand_zero`: only appicable to signSGD, compressedSGD and compressedSGDVote, rounds discretized gradients of value 0 randomly to -1 or 1
 - `--exp_name`: name of the folder, where results (plots + histories) get dropped
 - `--model`: model used for training
 - `--dataset`: dataset used for training
