@@ -19,9 +19,9 @@ plot_usages(files=['./used_data/bin_usages/compressed_sgd_B64_n3_lexp1_EvalInter
     titles=['compressedSGD lr=0.00025, min-max decay=0.9', 
             'compressedSGD lr=0.00025, min-max decay=0.7',
             'compressedSGD lr=0.00025, min-max decay=0.3',
-            'compressedSGD lr=0.00001, min-max decay=0.9',
-            'compressedSGD lr=0.00001, min-max decay=0.7',
-            'compressedSGD lr=0.00001, min-max decay=0.3'
+            'compressedSGD lr=0.0001, min-max decay=0.9',
+            'compressedSGD lr=0.0001, min-max decay=0.7',
+            'compressedSGD lr=0.0001, min-max decay=0.3'
             ],
      out='used_data/plots/usages_1worker_3bits_exp.png')
 
@@ -86,6 +86,13 @@ plot_usages(files=['./used_data/bin_usages/compressed_sgd_B64_n3_llin1_EvalInter
         './used_data/bin_usages/compressed_sgd_vote_B64_n3_lexp1_EvalInterval-2_Seed1917_Workers4/histories.pkl',
         './used_data/bin_usages/compressed_sgd_vote_B64_n3_lexp1_EvalInterval-2_Seed1917_Workers8/histories.pkl'
     ],
+     keys=[(0.0001, 0.7), plot_usages(files=['./used_data/bin_usages/compressed_sgd_B64_n3_llin1_EvalInterval-2_Seed1917_Workers1/histories.pkl',
+        './used_data/bin_usages/compressed_sgd_vote_B64_n3_llin1_EvalInterval-2_Seed1917_Workers4/histories.pkl',
+        './used_data/bin_usages/compressed_sgd_vote_B64_n3_llin1_EvalInterval-2_Seed1917_Workers8/histories.pkl',
+        './used_data/bin_usages/compressed_sgd_B64_n3_lexp1_EvalInterval-2_Seed1917_Workers1/histories.pkl',
+        './used_data/bin_usages/compressed_sgd_vote_B64_n3_lexp1_EvalInterval-2_Seed1917_Workers4/histories.pkl',
+        './used_data/bin_usages/compressed_sgd_vote_B64_n3_lexp1_EvalInterval-2_Seed1917_Workers8/histories.pkl'
+    ],
      keys=[(0.0001, 0.7), 
         (0.0001, 0.7),
         (0.0001, 0.7), 
@@ -100,9 +107,27 @@ plot_usages(files=['./used_data/bin_usages/compressed_sgd_B64_n3_llin1_EvalInter
     titles=['compressedSGD lr=0.0001, min-max decay=0.7, 1 worker, linear binning', 
             'compressedSGD lr=0.0001, min-max decay=0.7, 4 workers, linear binning',
             'compressedSGD lr=0.0001, min-max decay=0.7, 8 worker, linear binning',
-            'compressedSGD lr=0.00001, min-max decay=0.7, 1 worker, exponential binning',
-            'compressedSGD lr=0.00001, min-max decay=0.7, 4 workers, exponential binning',
-            'compressedSGD lr=0.00001, min-max decay=0.7, 8 workers, exponential binning'
+            'compressedSGD lr=0.0001, min-max decay=0.7, 1 worker, exponential binning',
+            'compressedSGD lr=0.0001, min-max decay=0.7, 4 workers, exponential binning',
+            'compressedSGD lr=0.0001, min-max decay=0.7, 8 workers, exponential binning'
+            ],
+     out='used_data/plots/usages_different_workers.png')
+        (0.0001, 0.7),
+        (0.0001, 0.7), 
+        (0.0001, 0.7), 
+        (0.0001, 0.7),
+        (0.0001, 0.7),
+    ],
+    num_x_plots=3,
+    num_y_plots=2,
+    figsize=(24,18),
+    num_bits=3,
+    titles=['compressedSGD lr=0.0001, min-max decay=0.7, 1 worker, linear binning', 
+            'compressedSGD lr=0.0001, min-max decay=0.7, 4 workers, linear binning',
+            'compressedSGD lr=0.0001, min-max decay=0.7, 8 worker, linear binning',
+            'compressedSGD lr=0.0001, min-max decay=0.7, 1 worker, exponential binning',
+            'compressedSGD lr=0.0001, min-max decay=0.7, 4 workers, exponential binning',
+            'compressedSGD lr=0.0001, min-max decay=0.7, 8 workers, exponential binning'
             ],
      out='used_data/plots/usages_different_workers.png')
 
@@ -117,7 +142,7 @@ plot_avg('batch_loss_hist',
     names=['SGD lr=0.8', 'SGD lr=0.5',
            'SGD lr=0.3', 'SGD lr=0.1'],
     out='used_data/plots/SGD_lr.png',
-    xaxis='number of batches',
+    xaxis='number of update steps',
     yaxis='(average) loss over the entire training data',
     title="SGD with different learning rates averaged over 3 Seeds",
     linspace_mul=100)
@@ -133,7 +158,7 @@ plot_avg('batch_loss_hist',
     names=['signSGD lr=0.001', 'signSGD lr=0.0005',
            'signSGD lr=0.0003', 'signSGD lr=0.0001'],
     out='used_data/plots/signSGD_lr.png',
-    xaxis='number of batches',
+    xaxis='number of update steps',
     yaxis='(average) loss over the entire training data',
     title="signSGD with different learning rates averaged over 3 Seeds",
     linspace_mul=100)
@@ -150,8 +175,8 @@ plot_avg('avg_epoch_loss_hist',
            'SGD lr=0.3', 'SGD lr=0.1'],
     out='used_data/plots/epochs_SGD_lr.png',
     xaxis='epochs',
-    yaxis='(average) loss over the test data',
-    title="SGD with differen learning rates averaged over 3 Seeds",
+    yaxis='(average) sample loss for the entire epoch',
+    title="SGD with different learning rates averaged over 3 Seeds",
     linspace_mul=1)
 
 plot('batch_loss_hist',
@@ -215,9 +240,9 @@ plot('avg_epoch_loss_hist',
             'signSGD lr=0.0003', 'signSGD lr=0.0001',
             'SGD lr=0.5'],
     out='./used_data/plots/epochs_comparison_seed1917.png',
-    title='test loss over 5 epochs for different methods',
+    title='epoch loss over 5 epochs for different methods',
     xaxis='epochs',
-    yaxis='(average) loss over test data',
+    yaxis='(average) sample loss for the entire epoch',
     linspace_mul=1  
 )
 
@@ -480,9 +505,9 @@ plot('avg_epoch_loss_hist',
 
         ],
     out='./used_data/plots/epochs_decay_lr_all_5bits.png',
-    title='test loss over 7 epochs for linear binning and 5 bits',
+    title='epoch loss over 7 epochs for linear binning and 5 bits',
     xaxis='epochs',
-    yaxis='(average) loss over the test data',
+    yaxis='(average) sample loss for the entire epoch',
     linspace_mul=1  
 )
 
@@ -527,9 +552,9 @@ plot('avg_epoch_loss_hist',
             'compressedSGD lr=0.00000625, min-max decay=0.3, 5 bits' 
         ],
     out='./used_data/plots/epochs_decay_lr_focused_5bits.png',
-    title='test loss over 7 epochs for linear binning and 5 bits',
+    title='epoch loss over 7 epochs for linear binning and 5 bits',
     xaxis='epochs',
-    yaxis='(average) loss over the test data',
+    yaxis='(average) sample loss for the entire epoch',
     linspace_mul=1  
 )
 
@@ -587,9 +612,9 @@ plot('avg_epoch_loss_hist',
 
         ],
     out='./used_data/plots/epochs_decay_lr_all_3bits.png',
-    title='test loss over 7 epochs for linear binning and 3 bits',
+    title='epoch loss over 7 epochs for linear binning and 3 bits',
     xaxis='epochs',
-    yaxis='(average) loss over the test data',
+    yaxis='(average) sample loss for the entire epoch',
     linspace_mul=1 
 )
 
@@ -635,9 +660,9 @@ plot('avg_epoch_loss_hist',
 
         ],
     out='./used_data/plots/epochs_decay_lr_focused_3bits.png',
-    title='test loss over 7 epochs for linear binning and 3 bits',
+    title='epoch loss over 7 epochs for linear binning and 3 bits',
     xaxis='epochs',
-    yaxis='(average) loss over the test data',
+    yaxis='(average) sample loss for the entire epoch',
     linspace_mul=1  
 )
 
@@ -658,9 +683,9 @@ plot('avg_epoch_loss_hist',
             'compressedSGD lr=0.0000625, min-max decay=0.9, 5 bits', 
         ],
     out='./used_data/plots/epochs_5_vs_3bits.png',
-    title='test loss over 7 epochs for linear binning for 3 and 5 bits',
+    title='epoch loss over 7 epochs for linear binning for 3 and 5 bits',
     xaxis='epochs',
-    yaxis='(average) loss over the test data',
+    yaxis='(average) sample loss for the entire epoch',
     linspace_mul=1  
 )
 
@@ -688,4 +713,141 @@ plot('batch_loss_hist',
     xaxis='number of update steps',
     yaxis='(average) loss over the full training data',
     linspace_mul=100  
+)
+
+plot('avg_epoch_loss_hist', 
+        files=[
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e2_EvalInterval100_Seed1917_Workers1/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e2_EvalInterval100_Seed1917_Workers1/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e4_EvalInterval100_Seed1917_Workers2/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e4_EvalInterval100_Seed1917_Workers2/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e8_EvalInterval100_Seed1917_Workers4/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e8_EvalInterval100_Seed1917_Workers4/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e16_EvalInterval100_Seed1917_Workers8/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e16_EvalInterval100_Seed1917_Workers8/histories.pkl',
+        ],
+        keys=[
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            ],
+        names=[
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=1', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=1',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=2', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=2',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=4', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=4',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=8', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=8',
+            ],
+        out='./used_data/plots/cSGD_3bits_num_workers_epoch_loss.png',
+        xaxis='epochs',
+        yaxis='(average) sample loss for the entire epoch',
+        title='Effect of Worker Count',
+        linspace_mul=1)
+
+plot('batch_loss_hist', 
+        files=[
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e2_EvalInterval100_Seed1917_Workers1/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e2_EvalInterval100_Seed1917_Workers1/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e4_EvalInterval100_Seed1917_Workers2/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e4_EvalInterval100_Seed1917_Workers2/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e8_EvalInterval100_Seed1917_Workers4/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e8_EvalInterval100_Seed1917_Workers4/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e16_EvalInterval100_Seed1917_Workers8/histories.pkl',
+            './used_data/num_workers/compressed_sgd_vote_B64_n3_blin_e16_EvalInterval100_Seed1917_Workers8/histories.pkl',
+        ],
+        keys=[
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            (0.0001, 0.3), (0.0001, 0.7),
+            ],
+        names=[
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=1', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=1',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=2', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=2',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=4', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=4',
+            'compressedSGD 3bits lr=0.0001, decay=0.3 workers=8', 'compressedSGD 3bits lr=0.0001, decay=0.7 workers=8',
+            ],
+        out='./used_data/plots/cSGD_3bits_num_workers_batch_loss.png',
+        xaxis='number of update steps',
+        yaxis='(average) test data loss',
+        title='Effect of Worker Count',
+        linspace_mul=100)
+plot('batch_loss_hist',
+    files=['./used_data/comparison_workers/compressed_sgd_vote_B64_n1_blin_e5_EvalInterval100_Seed1917_Workers2/histories.pkl',
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n1_blin_e5_EvalInterval100_Seed1917_Workers2/histories.pkl',
+        
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n1_blin_e10_EvalInterval100_Seed1917_Workers4/histories.pkl',
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n1_blin_e10_EvalInterval100_Seed1917_Workers4/histories.pkl',
+        
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n3_blin_e5_EvalInterval100_Seed1917_Workers2/histories.pkl',
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n3_blin_e5_EvalInterval100_Seed1917_Workers2/histories.pkl',
+
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n3_blin_e10_EvalInterval100_Seed1917_Workers4/histories.pkl',
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n3_blin_e10_EvalInterval100_Seed1917_Workers4/histories.pkl'
+        ],
+    keys=[(0.0001, 1),
+        (0.0003, 1),
+        (0.0001, 1),
+        (0.0003, 1),
+
+        (0.0001, 0.7),
+        (0.0001, 0.3),
+        (0.0001, 0.7),
+        (0.0001, 0.3),
+
+    ],
+    names=['signSGD lr=0.0001, 2 workers', 
+            'signSGD lr=0.0003, 2 workers',
+            'signSGD lr=0.0001, 4 workers',
+            'signSGD lr=0.0003, 4 workers',
+
+            'compressedSGD lr=0.0001, min-max decay=0.7, 2 workers',
+            'compressedSGD lr=0.0001, min-max decay=0.3, 2 workers',
+            'compressedSGD lr=0.0001, min-max decay=0.7, 4 workers',
+            'compressedSGD lr=0.0001, min-max decay=0.3, 4 workers'],
+    out='./used_data/plots/mul_worker_comp.png',
+    title='full training loss for different number of workers',
+    xaxis='number of update steps',
+    yaxis='(average) loss over the full training data',
+    linspace_mul=100  
+)
+
+plot('batch_loss_hist',
+    files=['./used_data/comparison_workers/compressed_sgd_vote_B64_n1_blin_e5_EvalInterval100_Seed1917_Workers2/histories.pkl',
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n1_blin_e5_EvalInterval100_Seed1917_Workers2/histories.pkl',
+        
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n1_blin_e10_EvalInterval100_Seed1917_Workers4/histories.pkl',
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n1_blin_e10_EvalInterval100_Seed1917_Workers4/histories.pkl',
+        
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n3_blin_e5_EvalInterval100_Seed1917_Workers2/histories.pkl',
+        
+        './used_data/comparison_workers/compressed_sgd_vote_B64_n3_blin_e10_EvalInterval100_Seed1917_Workers4/histories.pkl',
+        ],
+    keys=[(0.0001, 1),
+        (0.0003, 1),
+        (0.0001, 1),
+        (0.0003, 1),
+
+        (0.0001, 0.7),
+        (0.0001, 0.7),
+            
+
+            ],
+    names=['signSGD lr=0.0001, 2 workers', 
+            'signSGD lr=0.0003, 2 workers',
+            'signSGD lr=0.0001, 4 workers',
+            'signSGD lr=0.0003, 4 workers',
+
+            'compressedSGD lr=0.0001, min-max decay=0.7, 2 workers',
+            'compressedSGD lr=0.0001, min-max decay=0.7, 4 workers',
+            ],
+    out='./used_data/plots/mul_worker_focused_comp.png',
+    title='full training loss for different number of workers',
+    xaxis='number of update steps',
+    yaxis='(average) loss over the full training data',
+    linspace_mul=100 
 )
