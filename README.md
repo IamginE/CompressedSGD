@@ -26,3 +26,4 @@ pip install -r requirements.txt
 - The `logs` directory contains most of our experiments. But the subset of interest is `used_data` directory. The used data folder also contains a file, with all the function calls to generate the plots in used_data/plots. You can simply use them or your own commands at the bottom of `plot.py`.
 - On the root directory you can find training scripts as well as the `main.py` which instantiates models, data loaders, optimizers, and trainers and starts training. When finished, it also makes the plots and saves the histories.
 - You can find the implementation of optimizers, models, and data loaders in their respective directory. 
+- You can also refer to `used_data/plot_calls.txt` to access the function calls that generate the plots in the paper (from the used_data).
