@@ -1,4 +1,4 @@
-# SignSGDVariant
+# compressedSGD
 
 ## Setup
 ```bash
