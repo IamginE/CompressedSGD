@@ -89,6 +89,7 @@ def stochastic_gradient_descent(
     - objectives, a list of loss values on the whole dataset, collected at the end of each pass over the dataset (epoch)
     - param_states, a list of parameter vectors, collected at the end of each pass over the dataset
     """
+    optimizer = "Unknown"
     xs = [initial_x]  # parameters after each update
     objectives = []  # loss values after each update
     x = initial_x
@@ -96,6 +97,16 @@ def stochastic_gradient_descent(
     min_grad = None
     decay_max = 1.0
     decay_min = 1.0
+
+    if only_sign:
+        if binning is None:
+            optimizer = "Vanilla signSGD"
+        elif binning == 'lin':
+            optimizer = "compressedSGDlin"
+        elif binning == 'exp':
+            optimizer = "compressedSGDexp"
+    else:
+        optimizer = "SGD"
 
     for iteration in range(max_iters):
         grad = stochastic_gradient(targets_b, data_A, x, batch_size=batch_size)
@@ -148,8 +159,8 @@ def stochastic_gradient_descent(
         objectives.append(objective)
 
         if iteration % 1000 == 0:
-            print("SGD({bi:04d}/{ti:04d}): objective = {l:10.2f}".format(
-                bi=iteration, ti=max_iters - 1, l=objective))
+            print("{opt}({bi:04d}/{ti:04d}): objective = {l:10.2f}".format(
+                opt=optimizer, bi=iteration, ti=max_iters - 1, l=objective))
     return objectives, xs
 
 
@@ -182,11 +193,16 @@ def optimize_with_sgd(data, best_objective, only_sign=False, binning=None, num_b
     end_time = datetime.datetime.now()
 
     # Print result
+    ratio = 0.01
+    num_recs = len(sgd_objectives_dec_gamma_mu)
+    mean = np.mean(sgd_objectives_dec_gamma_mu[int(-ratio * num_recs):])
     execution_time = (end_time - start_time).total_seconds()
     print("SGD: execution time = {t:.3f} seconds".format(t=execution_time))
     print(f"f(x*) = {best_objective:.5f}")
-    print(f"Final value of f(x) = {sgd_objectives_dec_gamma_mu[-1]:.5f}")
-    print(f"Final value of f(x) - f(x*) = {(sgd_objectives_dec_gamma_mu[-1] - best_objective):.5f}")
+    print(f"Average value of f(x) during the last {ratio * 100}% of the steps = "
+          f"{mean:.5f}")
+    print(f"Average value of f(x) - f(x*) during the last {ratio * 100}% of the steps = "
+          f"{(mean - best_objective):.5f}")
 
 
 def optimize_lm(data=(default_A, default_b), optimizer="SGD", num_bits=0):
