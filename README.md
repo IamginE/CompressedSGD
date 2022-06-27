@@ -48,7 +48,7 @@ We have the following conventions for plotting:
 - `--dataset`: dataset used for training
 - `--dataset_root`: root directory of the dataset
 - `--optimizer`: optimizer to choose from [sgd, sign_sgd, compressed_sgd, compressed_sgd_vote]
-- `-batch_size`: batch size used for training
+- `--batch_size`: batch size used for training
 - `--epochs`: number of epochs to train
 - `--lr`: space-separated list of learning rates for training
 - `--weight_decay`: space-separated list of min-max decays (min_decay, max_decay in the compressedSGD classes), does not get used in signSGD and SGD
@@ -57,4 +57,4 @@ We have the following conventions for plotting:
 - `--num_workers`: number of workers to simulate, only applies to compressedSGDVote
 - `--batchwise_evaluation`: After every worker has received this many batches, an evaluation on the entire training set will be done. Set it to `<= 0` to disable evaluation.
 - `--count_usages`: counts bin usages and enables to plot them in the end but slows down performance, only applies to compressedSGD and compressedSGDVote
-- `-one_plot_optimizer`: determins wether the instant plots for a parameter sweep should be plotted together (True) or seperately (False)
+- `--one_plot_optimizer`: determins wether the instant plots for a parameter sweep should be plotted together (True) or seperately (False)
